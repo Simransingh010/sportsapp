@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'ai_match_finder_screen.dart';
 import 'ai_coach_screen.dart';
+import 'organizer_games_screen.dart';
 import '../models/game_model.dart';
 import '../services/supabase_service.dart';
 import '../services/gemini_service.dart';
@@ -293,6 +294,18 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   const SizedBox(height: 24),
 
+                  const Text(
+                    'Organizer Tools',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  _buildOrganizerCard(context),
+                  const SizedBox(height: 24),
+
                   // Discover Games Header
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -389,6 +402,61 @@ class _HomeScreenState extends State<HomeScreen> {
                 color: Colors.white,
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildOrganizerCard(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const OrganizerGamesScreen()),
+        );
+      },
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [
+              const Color(0xFF00FF88).withOpacity(0.15),
+              const Color(0xFF1A3A2E).withOpacity(0.7),
+            ],
+          ),
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: const Color(0xFF00FF88).withOpacity(0.3)),
+        ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(12),
+              decoration: BoxDecoration(
+                color: const Color(0xFF00FF88),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: const Icon(Icons.event_available, color: Color(0xFF0D1B1E), size: 24),
+            ),
+            const SizedBox(width: 16),
+            const Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Create & Manage Games',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.white),
+                  ),
+                  SizedBox(height: 4),
+                  Text(
+                    'Set schedules, edit details, and manage rosters.',
+                    style: TextStyle(fontSize: 12, color: Colors.white70),
+                  ),
+                ],
+              ),
+            ),
+            const Icon(Icons.chevron_right, color: Colors.white70),
           ],
         ),
       ),

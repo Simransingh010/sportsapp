@@ -145,6 +145,46 @@ class SupabaseService {
     }
   }
 
+  static Future<void> removeParticipant(String gameId, String participantId) async {
+    final game = await getGame(gameId);
+    if (game != null && game.participants.contains(participantId)) {
+      final updatedParticipants = game.participants.where((id) => id != participantId).toList();
+      await client.from('games').update({
+        'participants': updatedParticipants,
+        'current_players': game.currentPlayers - 1,
+      }).eq('id', gameId);
+    }
+  }
+
+  static Future<List<GameModel>> getGamesByOrganizer(String organizerId) async {
+    try {
+      final response = await client
+          .from('games')
+          .select()
+          .eq('organizer_id', organizerId)
+          .order('date_time');
+
+      return (response as List)
+          .map((json) => GameModel.fromJson(json))
+          .toList();
+    } catch (e) {
+      print('Error getting organizer games: $e');
+      return [];
+    }
+  }
+
+  static Future<void> createGame(GameModel game) async {
+    await client.from('games').insert(game.toJson());
+  }
+
+  static Future<void> updateGame(GameModel game) async {
+    await client.from('games').update(game.toJson()).eq('id', game.id);
+  }
+
+  static Future<void> deleteGame(String gameId) async {
+    await client.from('games').delete().eq('id', gameId);
+  }
+
   // Game summary methods
   static Future<GameSummaryModel?> getGameSummary(String gameId) async {
     try {
